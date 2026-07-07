@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
+import * as XLSX from 'xlsx';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
-import { Download, FileText, TrendingUp, TrendingDown } from 'lucide-react';
+import { Download, FileText, TrendingUp, TrendingDown, Table } from 'lucide-react';
 import { useStore } from '../store';
 import { formatCurrency, getMonthlyIncome, getMonthlyExpenses, getExpensesByCategory, CATEGORY_COLORS } from '../utils';
 
@@ -12,7 +13,7 @@ const LABELS = ['January','February','March','April','May','June','July'];
 const SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul'];
 
 export default function Reports() {
-  const { transactions } = useStore();
+  const { transactions, budgets, savingsGoals, bills, subscriptions } = useStore();
 
   const monthlyData = useMemo(() =>
     MONTHS.map((m, i) => {
@@ -33,6 +34,86 @@ export default function Reports() {
     const by = getExpensesByCategory(transactions);
     return Object.entries(by).sort((a, b) => b[1] - a[1]).map(([name, value]) => ({ name, value, color: CATEGORY_COLORS[name] || '#94A3B8' }));
   }, [transactions]);
+
+  const handleExportExcel = () => {
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: All Transactions
+    const txRows = [
+      ['Date', 'Description', 'Category', 'Type', 'Amount (€)'],
+      ...transactions
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map(t => [t.date, t.description, t.category, t.type, t.type === 'income' ? t.amount : Math.abs(t.amount)])
+    ];
+    const txSheet = XLSX.utils.aoa_to_sheet(txRows);
+    txSheet['!cols'] = [{ wch: 12 }, { wch: 32 }, { wch: 18 }, { wch: 10 }, { wch: 14 }];
+    XLSX.utils.book_append_sheet(wb, txSheet, 'Transactions');
+
+    // Sheet 2: Monthly Summary
+    const monthRows = [
+      ['Month', 'Income (€)', 'Expenses (€)', 'Net (€)', 'Savings Rate'],
+      ...monthlyData.map(r => [
+        r.fullMonth,
+        r.income,
+        r.expenses,
+        r.net,
+        r.income > 0 ? parseFloat(((r.net / r.income) * 100).toFixed(1)) : 0
+      ]),
+      ['YTD Total', ytdIncome, ytdExpenses, ytdSavings, ytdIncome > 0 ? parseFloat(((ytdSavings / ytdIncome) * 100).toFixed(1)) : 0]
+    ];
+    const monthSheet = XLSX.utils.aoa_to_sheet(monthRows);
+    monthSheet['!cols'] = [{ wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }];
+    XLSX.utils.book_append_sheet(wb, monthSheet, 'Monthly Summary');
+
+    // Sheet 3: Budget vs Actual
+    const budgetExpenses: Record<string, number> = {};
+    transactions.filter(t => t.type === 'expense' && t.date.startsWith('2026-07'))
+      .forEach(t => { budgetExpenses[t.category] = (budgetExpenses[t.category] || 0) + Math.abs(t.amount); });
+    const budgetRows = [
+      ['Category', 'Budgeted (€)', 'Spent (€)', 'Remaining (€)', '% Used'],
+      ...budgets.map(b => {
+        const spent = budgetExpenses[b.category] || 0;
+        const rem = b.budgeted - spent;
+        return [b.category, b.budgeted, parseFloat(spent.toFixed(2)), parseFloat(rem.toFixed(2)), b.budgeted > 0 ? parseFloat(((spent / b.budgeted) * 100).toFixed(1)) : 0];
+      })
+    ];
+    const budgetSheet = XLSX.utils.aoa_to_sheet(budgetRows);
+    budgetSheet['!cols'] = [{ wch: 16 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, budgetSheet, 'Budget vs Actual');
+
+    // Sheet 4: Savings Goals
+    const goalRows = [
+      ['Goal', 'Target (€)', 'Saved (€)', 'Remaining (€)', 'Monthly (€)', '% Complete', 'Months Left'],
+      ...savingsGoals.map(g => {
+        const pct = g.targetAmount > 0 ? parseFloat(((g.currentAmount / g.targetAmount) * 100).toFixed(1)) : 0;
+        const mLeft = g.monthlyContribution > 0 ? Math.ceil((g.targetAmount - g.currentAmount) / g.monthlyContribution) : 0;
+        return [g.name, g.targetAmount, g.currentAmount, parseFloat((g.targetAmount - g.currentAmount).toFixed(2)), g.monthlyContribution, pct, mLeft > 0 ? mLeft : 'Done'];
+      })
+    ];
+    const goalSheet = XLSX.utils.aoa_to_sheet(goalRows);
+    goalSheet['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 13 }, { wch: 12 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, goalSheet, 'Savings Goals');
+
+    // Sheet 5: Bills
+    const billRows = [
+      ['Bill', 'Category', 'Amount (€)', 'Annual (€)', 'Due Day', 'Status'],
+      ...bills.map(b => [b.name, b.category, b.amount, parseFloat((b.amount * 12).toFixed(2)), `${b.dueDay}th`, b.paid ? 'Paid' : 'Unpaid'])
+    ];
+    const billSheet = XLSX.utils.aoa_to_sheet(billRows);
+    billSheet['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, billSheet, 'Bills');
+
+    // Sheet 6: Subscriptions
+    const subRows = [
+      ['Service', 'Category', 'Monthly (€)', 'Annual (€)', 'Status', 'Renewal'],
+      ...(subscriptions || []).map(s => [s.name, s.category, s.amount, parseFloat((s.amount * 12).toFixed(2)), s.used ? 'Active' : 'Unused', s.renewal])
+    ];
+    const subSheet = XLSX.utils.aoa_to_sheet(subRows);
+    subSheet['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 10 }, { wch: 14 }];
+    XLSX.utils.book_append_sheet(wb, subSheet, 'Subscriptions');
+
+    XLSX.writeFile(wb, `lindani-finance-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
 
   const handleExport = (type: 'csv' | 'pdf') => {
     if (type === 'csv') {
@@ -106,6 +187,9 @@ export default function Reports() {
         <div className="flex gap-2">
           <button onClick={() => handleExport('csv')} className="btn-secondary flex items-center gap-2 text-sm">
             <Download size={14} /> Export CSV
+          </button>
+          <button onClick={handleExportExcel} className="btn-secondary flex items-center gap-2 text-sm border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+            <Table size={14} /> Export Excel
           </button>
           <button onClick={() => handleExport('pdf')} className="btn-primary flex items-center gap-2 text-sm">
             <FileText size={14} /> Print PDF
