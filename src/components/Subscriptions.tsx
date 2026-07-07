@@ -1,38 +1,65 @@
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Plus, Pencil, Trash2 } from 'lucide-react';
+import { useStore } from '../store';
 import { formatCurrency } from '../utils';
+import { Subscription } from '../types';
 
-const SUBS = [
-  { id: 's1', name: 'Netflix', category: 'Streaming', amount: 15.99, renewal: '2026-08-05', used: true, icon: '🎬', color: '#E50914' },
-  { id: 's2', name: 'Spotify', category: 'Music', amount: 9.99, renewal: '2026-08-05', used: true, icon: '🎵', color: '#1DB954' },
-  { id: 's3', name: 'Streaming Bundle', category: 'Streaming', amount: 19.99, renewal: '2026-08-25', used: false, icon: '📺', color: '#0078D4' },
-  { id: 's4', name: 'iCloud Storage', category: 'Cloud', amount: 2.99, renewal: '2026-08-12', used: true, icon: '☁️', color: '#3B82F6' },
-  { id: 's5', name: 'Adobe Creative', category: 'Software', amount: 59.99, renewal: '2026-08-18', used: true, icon: '🎨', color: '#FF0000' },
-  { id: 's6', name: 'GitHub Pro', category: 'Developer', amount: 3.67, renewal: '2026-08-20', used: true, icon: '💻', color: '#6366F1' },
-  { id: 's7', name: 'Notion', category: 'Productivity', amount: 8, renewal: '2026-08-10', used: false, icon: '📝', color: '#000000' },
-  { id: 's8', name: 'ChatGPT Plus', category: 'AI', amount: 18.84, renewal: '2026-08-03', used: true, icon: '🤖', color: '#10B981' },
-];
+const SUB_ICONS = ['🎬','🎵','📺','☁️','🎨','💻','📝','🤖','🎮','📱','📊','🔒','🗄️','🎙️','📰','🛒'];
+const SUB_CATEGORIES = ['Streaming', 'Music', 'Cloud', 'Software', 'Developer', 'Productivity', 'AI', 'Gaming', 'News', 'Other'];
+
+const BLANK: Omit<Subscription, 'id'> = {
+  name: '', category: 'Streaming', amount: 0, renewal: '', used: true, icon: '📄', color: '#7C3AED',
+};
 
 export default function Subscriptions() {
-  const [dismissed, setDismissed] = useState<string[]>([]);
+  const { subscriptions, addSubscription, updateSubscription, deleteSubscription } = useStore();
+  const [showForm, setShowForm] = useState(false);
+  const [editSub, setEditSub] = useState<Subscription | null>(null);
+  const [form, setForm] = useState<Omit<Subscription, 'id'>>({ ...BLANK });
 
-  const activeSubs = SUBS.filter(s => !dismissed.includes(s.id));
-  const unusedSubs = activeSubs.filter(s => !s.used);
-  const totalMonthly = activeSubs.reduce((s, sub) => s + sub.amount, 0);
+  const totalMonthly = subscriptions.reduce((s, sub) => s + sub.amount, 0);
   const totalAnnual = totalMonthly * 12;
+  const unusedSubs = subscriptions.filter(s => !s.used);
   const unusedCost = unusedSubs.reduce((s, sub) => s + sub.amount, 0);
 
-  const sorted = [...activeSubs].sort((a, b) => {
+  const sorted = [...subscriptions].sort((a, b) => {
     if (!a.used && b.used) return -1;
     if (a.used && !b.used) return 1;
     return b.amount - a.amount;
   });
 
+  const openAdd = () => {
+    setEditSub(null);
+    setForm({ ...BLANK });
+    setShowForm(true);
+  };
+
+  const openEdit = (s: Subscription) => {
+    setEditSub(s);
+    setForm({ name: s.name, category: s.category, amount: s.amount, renewal: s.renewal, used: s.used, icon: s.icon, color: s.color });
+    setShowForm(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editSub) {
+      updateSubscription(editSub.id, form);
+    } else {
+      addSubscription({ ...form, id: `sub_${Date.now()}` });
+    }
+    setShowForm(false);
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Subscription Manager</h1>
-        <p className="text-slate-400 text-sm mt-0.5">{activeSubs.length} active subscriptions tracked</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Subscription Manager</h1>
+          <p className="text-slate-400 text-sm mt-0.5">{subscriptions.length} active subscriptions tracked</p>
+        </div>
+        <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+          <Plus size={16} /> Add Subscription
+        </button>
       </div>
 
       {/* Summary */}
@@ -65,8 +92,8 @@ export default function Subscriptions() {
             <div>
               <div className="text-amber-300 font-semibold text-sm">Unused Subscriptions Detected</div>
               <p className="text-slate-400 text-xs mt-1">
-                You have {unusedSubs.length} subscriptions you haven't used recently.
-                Cancelling them would save you {formatCurrency(unusedCost * 12)} per year.
+                You have {unusedSubs.length} subscription{unusedSubs.length > 1 ? 's' : ''} you haven't used recently.
+                Cancelling would save {formatCurrency(unusedCost * 12)} per year.
               </p>
             </div>
           </div>
@@ -92,31 +119,36 @@ export default function Subscriptions() {
                   )}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5">{sub.category}</div>
-                <div className="text-xs text-slate-500 mt-0.5">
-                  Renews {new Date(sub.renewal).toLocaleDateString('en-IE', { day: 'numeric', month: 'short' })}
-                </div>
+                {sub.renewal && (
+                  <div className="text-xs text-slate-500 mt-0.5">
+                    Renews {new Date(sub.renewal).toLocaleDateString('en-IE', { day: 'numeric', month: 'short' })}
+                  </div>
+                )}
               </div>
-              <div className="text-right flex-shrink-0">
-                <div className="text-lg font-bold text-white">{formatCurrency(sub.amount)}<span className="text-xs text-slate-500">/mo</span></div>
-                <div className="text-xs text-slate-500">{formatCurrency(sub.amount * 12)}/yr</div>
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <div>
+                  <div className="text-lg font-bold text-white">{formatCurrency(sub.amount)}<span className="text-xs text-slate-500">/mo</span></div>
+                  <div className="text-xs text-slate-500 text-right">{formatCurrency(sub.amount * 12)}/yr</div>
+                </div>
+                <div className="flex gap-1">
+                  <button onClick={() => openEdit(sub)} className="text-slate-600 hover:text-violet-400 transition-colors p-1">
+                    <Pencil size={13} />
+                  </button>
+                  <button onClick={() => deleteSubscription(sub.id)} className="text-slate-600 hover:text-rose-400 transition-colors p-1">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
               </div>
             </div>
 
             {!sub.used && (
               <div className="mt-4 pt-4 border-t border-[#1E2038]">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setDismissed(d => [...d, sub.id])}
-                    className="flex-1 py-2 text-xs font-semibold rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <X size={12} /> Cancel Subscription
-                  </button>
-                  <button
-                    className="px-4 py-2 text-xs font-semibold rounded-lg bg-[#1C1C30] border border-[#2D2D50] text-slate-400 hover:text-slate-200 transition-colors"
-                  >
-                    Keep
-                  </button>
-                </div>
+                <button
+                  onClick={() => deleteSubscription(sub.id)}
+                  className="w-full py-2 text-xs font-semibold rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-colors"
+                >
+                  Cancel Subscription
+                </button>
               </div>
             )}
           </div>
@@ -128,7 +160,7 @@ export default function Subscriptions() {
         <h2 className="text-white font-semibold mb-4">Spending by Category</h2>
         <div className="space-y-3">
           {Object.entries(
-            activeSubs.reduce((acc, s) => { acc[s.category] = (acc[s.category] || 0) + s.amount; return acc; }, {} as Record<string, number>)
+            subscriptions.reduce((acc, s) => { acc[s.category] = (acc[s.category] || 0) + s.amount; return acc; }, {} as Record<string, number>)
           ).sort((a, b) => b[1] - a[1]).map(([cat, amount]) => (
             <div key={cat} className="flex items-center gap-3">
               <span className="text-sm text-slate-400 w-24 flex-shrink-0">{cat}</span>
@@ -141,6 +173,59 @@ export default function Subscriptions() {
           ))}
         </div>
       </div>
+
+      {/* Add / Edit Modal */}
+      {showForm && (
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowForm(false)}>
+          <div className="modal-content">
+            <h2 className="text-lg font-bold text-white mb-4">{editSub ? 'Edit Subscription' : 'Add Subscription'}</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="label">Service Name</label>
+                <input className="input" placeholder="e.g. Netflix" value={form.name}
+                  onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label">Monthly Cost (€)</label>
+                  <input className="input" type="number" step="0.01" min="0" value={form.amount || ''}
+                    onChange={e => setForm(p => ({ ...p, amount: parseFloat(e.target.value) || 0 }))} required />
+                </div>
+                <div>
+                  <label className="label">Renewal Date</label>
+                  <input className="input" type="date" value={form.renewal}
+                    onChange={e => setForm(p => ({ ...p, renewal: e.target.value }))} />
+                </div>
+              </div>
+              <div>
+                <label className="label">Category</label>
+                <select className="select" value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
+                  {SUB_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="label">Icon</label>
+                <div className="flex flex-wrap gap-2">
+                  {SUB_ICONS.map(icon => (
+                    <button key={icon} type="button" onClick={() => setForm(p => ({ ...p, icon }))}
+                      className={`w-10 h-10 text-xl rounded-lg border transition-all ${form.icon === icon ? 'border-violet-500 bg-violet-500/20' : 'border-[#2D2D50] bg-[#1C1C30] hover:border-violet-500/50'}`}>
+                      {icon}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={form.used} onChange={e => setForm(p => ({ ...p, used: e.target.checked }))} className="w-4 h-4 accent-violet-500" />
+                <span className="text-sm text-slate-300">Currently using this subscription</span>
+              </label>
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary flex-1">Cancel</button>
+                <button type="submit" className="btn-primary flex-1">{editSub ? 'Save Changes' : 'Add Subscription'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

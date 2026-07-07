@@ -12,6 +12,7 @@ import AIChat from './components/AIChat';
 import Reports from './components/Reports';
 import Calendar from './components/Calendar';
 import Subscriptions from './components/Subscriptions';
+import EmergencyFund from './components/EmergencyFund';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="bills" element={<Bills />} />
           <Route path="subscriptions" element={<Subscriptions />} />
           <Route path="networth" element={<NetWorth />} />
+          <Route path="emergency" element={<EmergencyFund />} />
           <Route path="chat" element={<AIChat />} />
           <Route path="reports" element={<Reports />} />
           <Route path="calendar" element={<Calendar />} />

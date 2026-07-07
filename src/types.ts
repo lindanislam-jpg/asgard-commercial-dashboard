@@ -48,6 +48,25 @@ export interface NetWorthItem {
   amount: number;
 }
 
+export interface Subscription {
+  id: string;
+  name: string;
+  category: string;
+  amount: number;
+  renewal: string;
+  used: boolean;
+  icon: string;
+  color: string;
+}
+
+export interface AppNotification {
+  id: string;
+  type: 'warning' | 'info' | 'success' | 'danger';
+  title: string;
+  message: string;
+  createdAt: string;
+}
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';

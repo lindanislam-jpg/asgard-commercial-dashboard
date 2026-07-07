@@ -1,13 +1,15 @@
 import { create } from 'zustand';
-import { Transaction, Budget, SavingsGoal, Bill, NetWorthItem, ChatMessage } from './types';
+import { Transaction, Budget, SavingsGoal, Bill, Subscription, NetWorthItem, ChatMessage } from './types';
 
 interface AppState {
   transactions: Transaction[];
   budgets: Budget[];
   savingsGoals: SavingsGoal[];
   bills: Bill[];
+  subscriptions: Subscription[];
   netWorthItems: NetWorthItem[];
   chatMessages: ChatMessage[];
+  dismissedNotifications: string[];
   darkMode: boolean;
   currentMonth: string;
 
@@ -21,13 +23,21 @@ interface AppState {
   updateSavingsGoal: (id: string, g: Partial<SavingsGoal>) => void;
   deleteSavingsGoal: (id: string) => void;
 
+  addBill: (b: Bill) => void;
+  updateBill: (id: string, b: Partial<Bill>) => void;
+  deleteBill: (id: string) => void;
   updateBillPaid: (id: string, paid: boolean) => void;
+
+  addSubscription: (s: Subscription) => void;
+  updateSubscription: (id: string, s: Partial<Subscription>) => void;
+  deleteSubscription: (id: string) => void;
 
   addNetWorthItem: (item: NetWorthItem) => void;
   updateNetWorthItem: (id: string, item: Partial<NetWorthItem>) => void;
   deleteNetWorthItem: (id: string) => void;
 
   addChatMessage: (msg: ChatMessage) => void;
+  dismissNotification: (id: string) => void;
   toggleDarkMode: () => void;
   setCurrentMonth: (month: string) => void;
 }
@@ -238,6 +248,17 @@ const BILLS: Bill[] = [
   { id: 'bill10', name: 'Health Insurance', amount: 55, category: 'Insurance', dueDay: 10, paid: false, recurring: true, icon: '❤️' },
 ];
 
+const SUBSCRIPTIONS: Subscription[] = [
+  { id: 's1', name: 'Netflix', category: 'Streaming', amount: 15.99, renewal: '2026-08-05', used: true, icon: '🎬', color: '#E50914' },
+  { id: 's2', name: 'Spotify', category: 'Music', amount: 9.99, renewal: '2026-08-05', used: true, icon: '🎵', color: '#1DB954' },
+  { id: 's3', name: 'Streaming Bundle', category: 'Streaming', amount: 19.99, renewal: '2026-08-25', used: false, icon: '📺', color: '#0078D4' },
+  { id: 's4', name: 'iCloud Storage', category: 'Cloud', amount: 2.99, renewal: '2026-08-12', used: true, icon: '☁️', color: '#3B82F6' },
+  { id: 's5', name: 'Adobe Creative', category: 'Software', amount: 59.99, renewal: '2026-08-18', used: true, icon: '🎨', color: '#FF0000' },
+  { id: 's6', name: 'GitHub Pro', category: 'Developer', amount: 3.67, renewal: '2026-08-20', used: true, icon: '💻', color: '#6366F1' },
+  { id: 's7', name: 'Notion', category: 'Productivity', amount: 8, renewal: '2026-08-10', used: false, icon: '📝', color: '#8B5CF6' },
+  { id: 's8', name: 'ChatGPT Plus', category: 'AI', amount: 18.84, renewal: '2026-08-03', used: true, icon: '🤖', color: '#10B981' },
+];
+
 const NET_WORTH_ITEMS: NetWorthItem[] = [
   { id: 'nw1', name: 'Current Account', category: 'Cash', itemType: 'asset', amount: 3200 },
   { id: 'nw2', name: 'Savings Account', category: 'Savings', itemType: 'asset', amount: 21750 },
@@ -249,13 +270,15 @@ const NET_WORTH_ITEMS: NetWorthItem[] = [
   { id: 'nw8', name: 'Credit Card Balance', category: 'Credit', itemType: 'liability', amount: 420 },
 ];
 
-export const useStore = create<AppState>((set, get) => ({
+export const useStore = create<AppState>((set) => ({
   transactions: TRANSACTIONS,
   budgets: BUDGETS,
   savingsGoals: SAVINGS_GOALS,
   bills: BILLS,
+  subscriptions: SUBSCRIPTIONS,
   netWorthItems: NET_WORTH_ITEMS,
   chatMessages: [],
+  dismissedNotifications: [],
   darkMode: true,
   currentMonth: '2026-07',
 
@@ -279,9 +302,16 @@ export const useStore = create<AppState>((set, get) => ({
     savingsGoals: s.savingsGoals.filter(sg => sg.id !== id)
   })),
 
+  addBill: (b) => set(s => ({ bills: [...s.bills, b] })),
+  updateBill: (id, b) => set(s => ({ bills: s.bills.map(x => x.id === id ? { ...x, ...b } : x) })),
+  deleteBill: (id) => set(s => ({ bills: s.bills.filter(b => b.id !== id) })),
   updateBillPaid: (id, paid) => set(s => ({
     bills: s.bills.map(b => b.id === id ? { ...b, paid } : b)
   })),
+
+  addSubscription: (sub) => set(s => ({ subscriptions: [...s.subscriptions, sub] })),
+  updateSubscription: (id, sub) => set(s => ({ subscriptions: s.subscriptions.map(x => x.id === id ? { ...x, ...sub } : x) })),
+  deleteSubscription: (id) => set(s => ({ subscriptions: s.subscriptions.filter(x => x.id !== id) })),
 
   addNetWorthItem: (item) => set(s => ({ netWorthItems: [...s.netWorthItems, item] })),
   updateNetWorthItem: (id, item) => set(s => ({
@@ -292,6 +322,7 @@ export const useStore = create<AppState>((set, get) => ({
   })),
 
   addChatMessage: (msg) => set(s => ({ chatMessages: [...s.chatMessages, msg] })),
+  dismissNotification: (id) => set(s => ({ dismissedNotifications: [...s.dismissedNotifications, id] })),
   toggleDarkMode: () => set(s => ({ darkMode: !s.darkMode })),
   setCurrentMonth: (month) => set({ currentMonth: month }),
 }));

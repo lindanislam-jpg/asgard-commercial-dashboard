@@ -47,6 +47,52 @@ export default function Reports() {
       a.download = 'lindani-finance-export.csv';
       a.click();
       URL.revokeObjectURL(url);
+    } else {
+      const fmt = (v: number) => `€${v.toFixed(2)}`;
+      const rows = monthlyData.map(r => {
+        const rate = r.income > 0 ? ((r.net / r.income) * 100).toFixed(1) : '0.0';
+        return `<tr><td>${r.fullMonth}</td><td style="color:#10B981">${fmt(r.income)}</td><td style="color:#F43F5E">${fmt(r.expenses)}</td><td style="color:${r.net>=0?'#10B981':'#F43F5E'}">${r.net>=0?'+':''}${fmt(r.net)}</td><td>${rate}%</td></tr>`;
+      }).join('');
+      const cats = ytdCategories.slice(0, 10).map(c =>
+        `<tr><td>${c.name}</td><td style="color:#F43F5E">${fmt(c.value)}</td><td>${((c.value/ytdExpenses)*100).toFixed(1)}%</td></tr>`
+      ).join('');
+      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Financial Report 2026 — Lindani Nzama</title>
+      <style>
+        body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;margin:0;padding:24px;background:#fff;color:#111;max-width:900px;margin:0 auto}
+        h1{font-size:24px;margin-bottom:4px}p.sub{color:#666;font-size:13px;margin-bottom:24px}
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+        .card{border:1px solid #e5e7eb;border-radius:10px;padding:14px}
+        .card .label{font-size:12px;color:#666;margin-bottom:4px}
+        .card .val{font-size:20px;font-weight:700}
+        h2{font-size:15px;font-weight:600;margin:0 0 10px}
+        table{width:100%;border-collapse:collapse;margin-bottom:24px}
+        th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#888;border-bottom:2px solid #e5e7eb;padding:8px 10px;text-align:left}
+        td{font-size:13px;padding:8px 10px;border-bottom:1px solid #f3f4f6}
+        tr:last-child td{border-bottom:none}
+        .footer{font-size:11px;color:#aaa;text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb}
+        @media print{body{padding:0}button{display:none}}
+      </style></head><body>
+      <h1>Financial Report 2026</h1>
+      <p class="sub">Lindani Nzama · Generated ${new Date().toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'})}</p>
+      <div class="grid">
+        <div class="card"><div class="label">YTD Income</div><div class="val" style="color:#10B981">${fmt(ytdIncome)}</div></div>
+        <div class="card"><div class="label">YTD Expenses</div><div class="val" style="color:#F43F5E">${fmt(ytdExpenses)}</div></div>
+        <div class="card"><div class="label">YTD Savings</div><div class="val" style="color:#7C3AED">${fmt(ytdSavings)}</div></div>
+        <div class="card"><div class="label">Savings Rate</div><div class="val">${((ytdSavings/ytdIncome)*100).toFixed(1)}%</div></div>
+      </div>
+      <h2>Monthly Breakdown</h2>
+      <table><thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th><th>Savings Rate</th></tr></thead><tbody>${rows}</tbody></table>
+      <h2>Top Spending Categories (YTD)</h2>
+      <table><thead><tr><th>Category</th><th>Amount</th><th>% of Expenses</th></tr></thead><tbody>${cats}</tbody></table>
+      <div class="footer">Lindani Nzama Financial Assistant · Confidential</div>
+      </body></html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.click();
+      URL.revokeObjectURL(url);
     }
   };
 
@@ -60,6 +106,9 @@ export default function Reports() {
         <div className="flex gap-2">
           <button onClick={() => handleExport('csv')} className="btn-secondary flex items-center gap-2 text-sm">
             <Download size={14} /> Export CSV
+          </button>
+          <button onClick={() => handleExport('pdf')} className="btn-primary flex items-center gap-2 text-sm">
+            <FileText size={14} /> Print PDF
           </button>
         </div>
       </div>

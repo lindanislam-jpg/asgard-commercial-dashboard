@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line
+  PieChart, Pie, Cell
 } from 'recharts';
-import { Plus, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { Plus, TrendingUp, Trash2 } from 'lucide-react';
 import { useStore } from '../store';
 import { formatCurrency, getMonthlyIncome, getIncomeByCategory, CATEGORY_COLORS, formatDate, INCOME_CATEGORIES } from '../utils';
 
@@ -11,7 +11,7 @@ const MONTHS = ['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','202
 const LABELS = ['Jan','Feb','Mar','Apr','May','Jun','Jul'];
 
 export default function Income() {
-  const { transactions, addTransaction } = useStore();
+  const { transactions, addTransaction, deleteTransaction } = useStore();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ date: '', description: '', amount: '', category: 'Salary', notes: '' });
 
@@ -129,15 +129,21 @@ export default function Income() {
         <h2 className="text-white font-semibold mb-4">All Income Transactions</h2>
         <div className="space-y-2">
           {incomeTransactions.map(tx => (
-            <div key={tx.id} className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-[#1C1C30] transition-colors">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+            <div key={tx.id} className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-[#1C1C30] transition-colors group">
+              <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
                 <TrendingUp size={15} className="text-emerald-400" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-slate-200">{tx.description}</div>
                 <div className="text-xs text-slate-500">{formatDate(tx.date)} · {tx.category}</div>
               </div>
-              <div className="text-sm font-bold text-emerald-400">{formatCurrency(tx.amount)}</div>
+              <div className="text-sm font-bold text-emerald-400 mr-2">{formatCurrency(tx.amount)}</div>
+              <button
+                onClick={() => deleteTransaction(tx.id)}
+                className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-rose-400 transition-all"
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           ))}
         </div>
