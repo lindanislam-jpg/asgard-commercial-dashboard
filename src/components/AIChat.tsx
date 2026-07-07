@@ -97,7 +97,14 @@ export default function AIChat() {
   const { transactions, savingsGoals, bills, netWorthItems, chatMessages, addChatMessage } = useStore();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('openai_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => {
+    const envKey = (import.meta.env.VITE_OPENAI_KEY as string) || '';
+    if (envKey) {
+      localStorage.setItem('openai_api_key', envKey);
+      return envKey;
+    }
+    return localStorage.getItem('openai_api_key') || '';
+  });
   const [showKey, setShowKey] = useState(false);
   const [keyInput, setKeyInput] = useState('');
   const [showKeyForm, setShowKeyForm] = useState(false);
