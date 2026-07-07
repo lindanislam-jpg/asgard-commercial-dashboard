@@ -44,7 +44,7 @@ export default function Reports() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'asgard-finance-export.csv';
+      a.download = 'lindani-finance-export.csv';
       a.click();
       URL.revokeObjectURL(url);
     }

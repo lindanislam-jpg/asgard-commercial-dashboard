@@ -55,8 +55,8 @@ export default function Layout() {
             <Wallet size={18} className="text-white" />
           </div>
           <div>
-            <div className="text-white font-bold text-sm leading-tight">Asgard Finance</div>
-            <div className="text-slate-500 text-xs">Personal Money OS</div>
+            <div className="text-white font-bold text-sm leading-tight">Lindani Nzama</div>
+            <div className="text-slate-500 text-xs">Financial Assistant</div>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="ml-auto text-slate-500 hover:text-slate-300 lg:hidden">
             <X size={18} />
@@ -117,7 +117,7 @@ export default function Layout() {
               {new Date().toLocaleDateString('en-IE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
             </div>
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-              LI
+              LN
             </div>
           </div>
         </header>
