@@ -547,5 +547,474 @@ From: dholden@asgardmm.com
 Subject: Action Required – CEL Kiosk Phase 2 delivery
 
 Urgent – we need to confirm the delivery date for AMM764 this week.`,rows:12,className:"w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono resize-none"}),u.jsxs("div",{className:"flex gap-3",children:[u.jsx("button",{onClick:e,className:"px-4 py-2 text-sm border border-zinc-700 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors",children:"Cancel"}),u.jsxs("button",{onClick:p,disabled:n.trim().length<20,className:"flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors",children:[u.jsx(B8,{size:13})," Scan for Action Items"]})]})]}),r==="scanning"&&u.jsxs("div",{className:"py-12 text-center",children:[u.jsx(B8,{size:28,className:"mx-auto mb-3 text-emerald-400 animate-spin"}),u.jsx("p",{className:"text-zinc-300 font-medium",children:"Scanning emails…"}),u.jsx("p",{className:"text-zinc-500 text-xs mt-1",children:"Detecting action keywords and extracting tasks"})]}),r==="review"&&u.jsx(u.Fragment,{children:s.length===0?u.jsxs("div",{className:"py-8 text-center",children:[u.jsx(bf,{size:28,className:"mx-auto mb-3 text-zinc-600"}),u.jsx("p",{className:"text-zinc-400 font-medium",children:"No action items found"}),u.jsx("p",{className:"text-zinc-600 text-xs mt-1",children:"Try pasting more emails or check the format"}),u.jsx("button",{onClick:()=>a("paste"),className:"mt-4 px-4 py-2 text-sm border border-zinc-700 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors",children:"← Try Again"})]}):u.jsxs(u.Fragment,{children:[u.jsxs("div",{className:"flex items-center justify-between",children:[u.jsxs("p",{className:"text-sm text-zinc-300 font-medium",children:[s.filter(b=>b.selected).length," of ",s.length," action items selected"]}),u.jsx("button",{onClick:()=>l(b=>b.map(v=>({...v,selected:!s.every(A=>A.selected)}))),className:"text-xs text-zinc-500 hover:text-zinc-300",children:s.every(b=>b.selected)?"Deselect all":"Select all"})]}),u.jsx("div",{className:"space-y-2 max-h-80 overflow-y-auto pr-1",children:s.map(b=>u.jsx("div",{onClick:()=>m(b.id),className:`rounded-lg border p-3 cursor-pointer transition-colors ${b.selected?"bg-emerald-900/10 border-emerald-700/30":"bg-zinc-800/30 border-zinc-800 opacity-50"}`,children:u.jsxs("div",{className:"flex items-start gap-2",children:[u.jsx(U8,{size:13,className:`mt-0.5 flex-shrink-0 ${b.selected?"text-emerald-400":"text-zinc-600"}`}),u.jsxs("div",{className:"flex-1 min-w-0",children:[u.jsx("p",{className:"text-xs font-medium text-zinc-200 truncate",children:b.actionItem}),u.jsxs("p",{className:"text-[10px] text-zinc-500 mt-0.5 truncate",children:["📧 ",b.subject," · ",b.from||"unknown sender"]}),u.jsxs("div",{className:"flex gap-2 mt-1.5 flex-wrap",onClick:v=>v.stopPropagation(),children:[u.jsx("select",{value:b.priority,onChange:v=>x(b.id,"priority",v.target.value),className:`text-[10px] bg-zinc-800 border border-zinc-700 rounded px-1.5 py-0.5 ${g[b.priority]}`,children:["Low","Medium","High","Critical"].map(v=>u.jsx("option",{children:v},v))}),u.jsx("select",{value:b.assignedTo,onChange:v=>x(b.id,"assignedTo",v.target.value),className:"text-[10px] bg-zinc-800 border border-zinc-700 rounded px-1.5 py-0.5 text-zinc-300",children:ln.map(v=>u.jsx("option",{value:v.name,children:v.name},v.email))}),u.jsx("input",{value:b.project,onChange:v=>x(b.id,"project",v.target.value),placeholder:"Project",className:"text-[10px] bg-zinc-800 border border-zinc-700 rounded px-1.5 py-0.5 text-zinc-300 w-20"})]})]})]})},b.id))}),u.jsxs("div",{className:"flex gap-3 pt-1",children:[u.jsx("button",{onClick:()=>a("paste"),className:"px-4 py-2 text-sm border border-zinc-700 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors",children:"← Back"}),u.jsxs("button",{onClick:y,disabled:!s.some(b=>b.selected),className:"flex-1 px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg font-medium transition-colors",children:["Add ",s.filter(b=>b.selected).length," Tasks to To-Do List"]})]})]})}),r==="done"&&u.jsxs("div",{className:"py-8 text-center",children:[u.jsx(ic,{size:36,className:"mx-auto mb-3 text-emerald-400"}),u.jsx("p",{className:"text-zinc-200 font-semibold text-lg mb-1",children:"Tasks Added!"}),u.jsx("p",{className:"text-zinc-500 text-sm mb-4",children:"Email action items are now in your To-Do list."}),u.jsx("button",{onClick:e,className:"px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors",children:"Done"})]})]})]})})}function xue(){const[e,t]=w.useState(()=>{try{const k=localStorage.getItem("asgard-todos"),P=k?JSON.parse(k):q8,C=new Set(P.map(te=>te.id)),H=voe.filter(te=>!C.has(te.id));return H.length?[...H,...P]:P}catch{return q8}}),[r,a]=w.useState(!1),[n,i]=w.useState(!1),[s,l]=w.useState("All"),[c,o]=w.useState("All"),[f,d]=w.useState({priority:"Medium",status:"Not Started"});w.useEffect(()=>{try{localStorage.setItem("asgard-todos",JSON.stringify(e))}catch{}},[e]);const h=new Date().toISOString().slice(0,10),p=k=>k.dueDate&&k.dueDate<h&&k.status!=="Complete",m=k=>k.dueDate===h&&k.status!=="Complete",x=e.filter(k=>c==="All"||k.assignedTo===c).filter(k=>s==="All"?!0:s==="Overdue"?p(k):s==="Today"?m(k):k.status===s),y=()=>{if(!f.task)return;const k={id:Date.now().toString(),task:f.task,description:f.description||"",project:f.project||"",assignedTo:f.assignedTo||"",priority:f.priority||"Medium",dueDate:f.dueDate||"",status:"Not Started",createdAt:h};t(P=>[k,...P]),d({priority:"Medium",status:"Not Started"}),a(!1)},g=k=>t(P=>[...k,...P]),b=(k,P)=>t(C=>C.map(H=>H.id===k?{...H,status:P}:H)),v=k=>t(P=>P.filter(C=>C.id!==k)),A={Critical:"bg-red-500/20 text-red-400 border border-red-500/30",High:"bg-orange-500/20 text-orange-400 border border-orange-500/30",Medium:"bg-amber-500/20 text-amber-400 border border-amber-500/30",Low:"bg-zinc-700/40 text-zinc-400 border border-zinc-700"},E={"Not Started":"bg-zinc-700/40 text-zinc-400","In Progress":"bg-sky-500/20 text-sky-400",Waiting:"bg-amber-500/20 text-amber-400",Complete:"bg-emerald-500/20 text-emerald-400"},S=e.filter(p).length,_=e.filter(m).length,N=e.filter(k=>k.status==="Complete").length,T=e.filter(k=>k.dueDate>=h&&k.dueDate<=new Date(Date.now()+7*864e5).toISOString().slice(0,10)&&k.status!=="Complete").length;return u.jsxs("div",{className:"space-y-5",children:[n&&u.jsx(mue,{onClose:()=>i(!1),onImport:k=>{g(k),i(!1)}}),u.jsxs("div",{className:"grid grid-cols-2 lg:grid-cols-4 gap-3",children:[u.jsxs("div",{onClick:()=>l("Overdue"),className:"cursor-pointer bg-red-500/10 border border-red-500/20 rounded-lg p-3",children:[u.jsx("p",{className:"text-[10px] text-zinc-500 uppercase tracking-wider",children:"Overdue"}),u.jsx("p",{className:"text-2xl font-bold text-red-400 mt-1",children:S})]}),u.jsxs("div",{onClick:()=>l("Today"),className:"cursor-pointer bg-amber-500/10 border border-amber-500/20 rounded-lg p-3",children:[u.jsx("p",{className:"text-[10px] text-zinc-500 uppercase tracking-wider",children:"Due Today"}),u.jsx("p",{className:"text-2xl font-bold text-amber-400 mt-1",children:_})]}),u.jsxs("div",{className:"bg-zinc-800 border border-zinc-700 rounded-lg p-3",children:[u.jsx("p",{className:"text-[10px] text-zinc-500 uppercase tracking-wider",children:"This Week"}),u.jsx("p",{className:"text-2xl font-bold text-sky-400 mt-1",children:T})]}),u.jsxs("div",{onClick:()=>l("Complete"),className:"cursor-pointer bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3",children:[u.jsx("p",{className:"text-[10px] text-zinc-500 uppercase tracking-wider",children:"Completed"}),u.jsx("p",{className:"text-2xl font-bold text-emerald-400 mt-1",children:N})]})]}),u.jsxs("div",{className:"flex items-center gap-2 flex-wrap",children:[u.jsx(Gce,{size:12,className:"text-zinc-500 flex-shrink-0"}),["All",...ln.map(k=>k.name)].map(k=>{var P,C;return u.jsxs("button",{onClick:()=>o(k),className:`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border transition-colors ${c===k?"bg-emerald-600/20 border-emerald-500/40 text-emerald-400":"border-zinc-700 text-zinc-500 hover:text-zinc-300"}`,children:[k!=="All"&&u.jsx("span",{className:"w-4 h-4 rounded-full bg-emerald-800/40 flex items-center justify-center text-[8px] font-bold text-emerald-400",children:(P=ln.find(H=>H.name===k))==null?void 0:P.initials}),k,k!=="All"&&u.jsx("span",{className:"text-[9px] text-zinc-600",children:(C=ln.find(H=>H.name===k))==null?void 0:C.email})]},k)})]}),r&&u.jsxs("div",{className:"bg-zinc-900 border border-zinc-700 rounded-lg p-4",children:[u.jsx("h3",{className:"text-sm font-semibold text-zinc-200 mb-3",children:"New Task"}),u.jsxs("div",{className:"grid grid-cols-1 sm:grid-cols-2 gap-3",children:[u.jsx("div",{className:"sm:col-span-2",children:u.jsx("input",{placeholder:"Task name *",value:f.task||"",onChange:k=>d(P=>({...P,task:k.target.value})),className:"w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"})}),u.jsx("div",{className:"sm:col-span-2",children:u.jsx("input",{placeholder:"Description",value:f.description||"",onChange:k=>d(P=>({...P,description:k.target.value})),className:"w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"})}),u.jsx("input",{placeholder:"Project (e.g. AMM867)",value:f.project||"",onChange:k=>d(P=>({...P,project:k.target.value})),className:"bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"}),u.jsxs("select",{value:f.assignedTo||"",onChange:k=>d(P=>({...P,assignedTo:k.target.value})),className:"bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-300",children:[u.jsx("option",{value:"",children:"Assign to…"}),ln.map(k=>u.jsxs("option",{value:k.name,children:[k.name," (",k.email,")"]},k.email))]}),u.jsx("input",{type:"date",value:f.dueDate||"",onChange:k=>d(P=>({...P,dueDate:k.target.value})),className:"bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-emerald-500/50"}),u.jsx("select",{value:f.priority,onChange:k=>d(P=>({...P,priority:k.target.value})),className:"bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs text-zinc-300",children:["Low","Medium","High","Critical"].map(k=>u.jsx("option",{children:k},k))})]}),u.jsxs("div",{className:"flex gap-2 mt-3",children:[u.jsx("button",{onClick:y,className:"bg-emerald-600 hover:bg-emerald-500 text-white rounded px-4 py-1.5 text-xs font-medium transition-colors",children:"Add Task"}),u.jsx("button",{onClick:()=>a(!1),className:"bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded px-4 py-1.5 text-xs transition-colors",children:"Cancel"})]})]}),u.jsxs("div",{className:"bg-zinc-900 border border-zinc-800 rounded-lg p-4",children:[u.jsxs("div",{className:"flex items-center justify-between mb-4 flex-wrap gap-2",children:[u.jsx("div",{className:"flex gap-1 flex-wrap",children:["All","Not Started","In Progress","Waiting","Complete","Overdue","Today"].map(k=>u.jsx("button",{onClick:()=>l(k),className:`px-2.5 py-1 rounded text-xs transition-colors ${s===k?"bg-emerald-600 text-white":"bg-zinc-800 text-zinc-400 hover:bg-zinc-700"}`,children:k},k))}),u.jsxs("div",{className:"flex gap-2",children:[u.jsxs("button",{onClick:()=>i(!0),className:"flex items-center gap-1.5 bg-sky-700/30 hover:bg-sky-700/50 border border-sky-600/40 text-sky-400 rounded px-3 py-1.5 text-xs font-medium transition-colors",children:[u.jsx(bf,{size:11})," Scan Emails"]}),u.jsxs("button",{onClick:()=>a(!0),className:"flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded px-3 py-1.5 text-xs font-medium transition-colors",children:[u.jsx(Yo,{size:12})," New Task"]})]})]}),u.jsxs("div",{className:"space-y-2",children:[x.length===0&&u.jsx("p",{className:"text-xs text-zinc-500 text-center py-6",children:"No tasks found"}),x.map(k=>{var C;const P=ln.find(H=>H.name===k.assignedTo);return u.jsxs("div",{className:`flex items-start gap-3 px-3 py-3 rounded-lg border ${p(k)?"bg-red-500/5 border-red-500/20":"bg-zinc-800/40 border-zinc-800"}`,children:[u.jsx("button",{onClick:()=>b(k.id,k.status==="Complete"?"Not Started":"Complete"),className:"mt-0.5 flex-shrink-0",children:u.jsx(U8,{size:14,className:k.status==="Complete"?"text-emerald-400":"text-zinc-600"})}),u.jsxs("div",{className:"flex-1 min-w-0",children:[u.jsxs("div",{className:"flex items-center gap-2 flex-wrap",children:[u.jsx("span",{className:`text-xs font-medium ${k.status==="Complete"?"line-through text-zinc-500":"text-zinc-200"}`,children:k.task}),u.jsx("span",{className:`text-[10px] px-1.5 py-0.5 rounded border ${A[k.priority]}`,children:k.priority}),p(k)&&u.jsx("span",{className:"text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30",children:"OVERDUE"}),((C=k.description)==null?void 0:C.startsWith("From email:"))&&u.jsxs("span",{className:"text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center gap-0.5",children:[u.jsx(bf,{size:8})," email"]})]}),k.description&&u.jsx("p",{className:"text-[10px] text-zinc-500 mt-0.5 truncate",children:k.description}),u.jsxs("div",{className:"flex items-center gap-3 mt-1.5 flex-wrap",children:[k.project&&u.jsx("span",{className:"text-[10px] text-emerald-400",children:k.project}),P?u.jsxs("span",{className:"text-[10px] text-zinc-500 flex items-center gap-1",children:[u.jsx("span",{className:"w-3.5 h-3.5 rounded-full bg-emerald-800/40 flex items-center justify-center text-[7px] font-bold text-emerald-400",children:P.initials}),P.name]}):k.assignedTo?u.jsxs("span",{className:"text-[10px] text-zinc-500",children:["→ ",k.assignedTo]}):null,k.dueDate&&u.jsxs("span",{className:`text-[10px] ${p(k)?"text-red-400":m(k)?"text-amber-400":"text-zinc-500"}`,children:["Due: ",k.dueDate]})]})]}),u.jsxs("div",{className:"flex items-center gap-2 flex-shrink-0",children:[u.jsx("select",{value:k.status,onChange:H=>b(k.id,H.target.value),className:`text-[10px] rounded px-1.5 py-0.5 border-0 ${E[k.status]} bg-transparent cursor-pointer`,children:["Not Started","In Progress","Waiting","Complete"].map(H=>u.jsx("option",{value:H,children:H},H))}),u.jsx("button",{onClick:()=>v(k.id),className:"text-zinc-600 hover:text-red-400 transition-colors",children:u.jsx(lc,{size:11})})]})]},k.id)})]})]})]})}const vue=[];function X8(){vue.forEach(e=>e())}function gue(){const[e,t]=w.useState("executive"),[r,a]=w.useState(!1),[n,i]=w.useState(""),[s,l]=w.useState(!1),[c,o]=w.useState(()=>{const x=localStorage.getItem("asgard_last_updated");return x?new Date(x):null}),[f,d]=w.useState(()=>{const x=localStorage.getItem("asgard_imported_sections");return x?new Set(JSON.parse(x)):new Set}),h=x=>{t(x),a(!1),i("")},p=(x,y)=>{localStorage.setItem("asgard_"+x,JSON.stringify(y)),localStorage.setItem("asgard_last_updated",new Date().toISOString()),d(g=>{const b=new Set([...g,x]);return localStorage.setItem("asgard_imported_sections",JSON.stringify([...b])),b}),o(new Date),X8()},m=x=>{["invoices","purchaseOrders","subcontractors","variations","suppliers"].forEach(y=>localStorage.removeItem("asgard_"+y)),localStorage.removeItem("asgard_imported_sections"),d(new Set),X8()};return u.jsxs("div",{className:"flex h-screen overflow-hidden bg-zinc-950 text-zinc-200",children:[u.jsxs("aside",{className:`fixed inset-y-0 left-0 z-50 w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col transform transition-transform duration-200 ${r?"translate-x-0":"-translate-x-full"} lg:relative lg:translate-x-0`,children:[u.jsxs("div",{className:"h-14 flex items-center px-4 border-b border-zinc-800 gap-3 flex-shrink-0",children:[u.jsx("div",{className:"w-7 h-7 bg-emerald-600 rounded flex items-center justify-center flex-shrink-0",children:u.jsx(Wce,{size:14,className:"text-white"})}),u.jsxs("div",{children:[u.jsx("div",{className:"text-sm font-bold tracking-wide text-zinc-100",children:"ASGARD MM"}),u.jsx("div",{className:"text-[10px] text-zinc-500 -mt-0.5",children:"Commercial Intelligence"})]})]}),u.jsx("nav",{className:"flex-1 py-2 overflow-y-auto",children:Soe.map(x=>u.jsxs("div",{className:"mb-1",children:[u.jsx("p",{className:"text-[9px] uppercase tracking-widest text-zinc-600 px-4 pt-3 pb-1 font-semibold",children:x.label}),x.items.map(y=>{const g=y.icon,b=e===y.id;return u.jsxs("button",{onClick:()=>h(y.id),className:`w-full flex items-center gap-2.5 px-4 py-2 text-xs transition-colors ${b?"bg-emerald-600/15 text-emerald-400 border-r-2 border-emerald-500":"text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50"}`,children:[u.jsx(g,{size:13}),u.jsx("span",{children:y.label}),b&&u.jsx(Zce,{size:11,className:"ml-auto"})]},y.id)})]},x.label))}),u.jsxs("div",{className:"px-4 py-3 border-t border-zinc-800 flex-shrink-0",children:[u.jsx("p",{className:"text-[10px] text-zinc-600",children:"Asgard Modular Manufacturing"}),u.jsx("p",{className:"text-[10px] text-zinc-600",children:"v2.0 · Commercial Intelligence Platform"})]})]}),r&&u.jsx("div",{className:"fixed inset-0 bg-black/50 z-40 lg:hidden",onClick:()=>a(!1)}),u.jsxs("div",{className:"flex-1 flex flex-col overflow-hidden min-w-0",children:[u.jsxs("header",{className:"h-14 bg-zinc-900 border-b border-zinc-800 flex items-center px-4 gap-3 flex-shrink-0",children:[u.jsx("button",{onClick:()=>a(!r),className:"lg:hidden text-zinc-500 hover:text-zinc-200",children:r?u.jsx(Af,{size:20}):u.jsx(ooe,{size:20})}),u.jsx("h1",{className:"text-sm font-semibold text-zinc-200 hidden md:block truncate max-w-48",children:W8[e]}),u.jsx("div",{className:"flex-1 flex items-center",children:u.jsxs("div",{className:"relative w-full max-w-sm",children:[u.jsx(foe,{size:12,className:"absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500"}),u.jsx("input",{type:"text",placeholder:"Search projects, invoices, POs, suppliers…",value:n,onChange:x=>i(x.target.value),className:"w-full bg-zinc-800 border border-zinc-700 rounded pl-8 pr-3 py-1.5 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"})]})}),u.jsx("span",{className:"text-xs text-zinc-600 hidden xl:block",children:new Date().toLocaleDateString("en-IE",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}),u.jsx(uue,{}),u.jsxs("button",{onClick:()=>l(!0),className:"flex items-center gap-1.5 bg-emerald-700/30 hover:bg-emerald-700/50 border border-emerald-600/40 rounded px-2.5 py-1.5 text-xs text-emerald-400 transition-colors",children:[u.jsx(Zm,{size:12}),u.jsx("span",{className:"hidden sm:inline",children:"Import"}),f.size>0&&u.jsx("span",{className:"bg-emerald-500 text-white text-[9px] rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold",children:f.size})]}),u.jsxs("button",{onClick:()=>{const x=e;let y=[],g=[];x==="projects"?(y=["Project","Client","Contract","Forecast","Budget","Actual","Complete%","Status"],g=Pe.map(b=>[[b.name,b.client,b.contract,b.forecast,b.budgetCost,b.actual,b.complete,b.status]])):x==="cashflow"?(y=["Month","Turnover","Applications","Received","Outstanding"],g=Ks.map(b=>[[b.month,b.turnover,b.applications,b.received,b.outstanding]])):x==="variations"?(y=["ID","Project","Description","Value","Status"],g=Wi.map(b=>[[b.id,b.project,b.description,b.value,b.status]])):x==="purchase-orders"?(y=["Project","PO","Supplier","Description","Amount","Status"],g=ri.map(b=>[[b.project,b.po,b.supplier,b.description,b.amount,b.status]])):(y=["Section"],g=[[[W8[e]]]]),tx(`asgard-${x}-${new Date().toISOString().slice(0,10)}.csv`,y,g)},className:"flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-zinc-400 transition-colors",children:[u.jsx(yf,{size:12}),u.jsx("span",{className:"hidden sm:inline",children:"Export"})]}),u.jsxs("button",{onClick:()=>window.print(),className:"flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-zinc-400 transition-colors",children:[u.jsx(Yb,{size:12}),u.jsx("span",{className:"hidden sm:inline",children:"Print"})]})]}),n.trim()&&u.jsx(tue,{query:n,onClear:()=>i(""),navigate:h}),f.size>0&&u.jsxs("div",{className:"bg-emerald-900/20 border-b border-emerald-800/30 px-4 py-1.5 flex items-center gap-2 text-xs text-emerald-400 flex-shrink-0",children:[u.jsx(ic,{size:11}),u.jsxs("span",{children:["Live imported data active: ",[...f].join(", ")]}),c&&u.jsxs("span",{className:"text-zinc-600 ml-1",children:["· Updated ",(()=>{const x=Math.floor((Date.now()-c.getTime())/6e4);if(x<60)return`${x}m ago`;const y=Math.floor(x/60);return y<24?`${y}h ago`:`${Math.floor(y/24)}d ago`})()]}),u.jsxs("button",{onClick:()=>m(),className:"ml-auto flex items-center gap-1 text-zinc-500 hover:text-zinc-300 transition-colors",children:[u.jsx(sc,{size:10})," Reset all to defaults"]})]}),(()=>{if(!c)return null;const x=(Date.now()-c.getTime())/36e5;if(x<24)return null;const y=Math.floor(x/24);return u.jsxs("div",{className:"bg-amber-900/20 border-b border-amber-700/30 px-4 py-1.5 flex items-center gap-2 text-xs text-amber-400 flex-shrink-0",children:[u.jsx(cc,{size:11}),u.jsxs("span",{children:["Data is ",u.jsxs("strong",{children:[y," day",y>1?"s":""," old"]})," — consider importing fresh data from your Excel files"]}),u.jsxs("button",{onClick:()=>l(!0),className:"ml-auto flex items-center gap-1.5 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-400 px-2 py-0.5 rounded transition-colors",children:[u.jsx(Zm,{size:10})," Import Now"]})]})})(),u.jsxs("main",{className:"flex-1 overflow-y-auto p-4 lg:p-5",children:[e==="executive"&&u.jsx(Eoe,{}),e==="commercial-kpis"&&u.jsx(fue,{}),e==="weekly-snapshot"&&u.jsx(cue,{}),e==="todo"&&u.jsx(xue,{}),e==="projects"&&u.jsx(koe,{}),e==="pl-summary"&&u.jsx(aue,{}),e==="payment-apps"&&u.jsx(rue,{}),e==="aged-debt"&&u.jsx(nue,{}),e==="cost-to-complete"&&u.jsx(iue,{}),e==="variations"&&u.jsx(joe,{}),e==="cashflow"&&u.jsx(Ooe,{}),e==="manufacturing"&&u.jsx(hue,{}),e==="labour"&&u.jsx(due,{}),e==="programme"&&u.jsx(lue,{}),e==="procurement"&&u.jsx(pue,{}),e==="subcontractors"&&u.jsx(sue,{}),e==="purchase-orders"&&u.jsx(Roe,{}),e==="suppliers"&&u.jsx(Poe,{}),e==="costs"&&u.jsx(Toe,{}),e==="timesheets"&&u.jsx(eue,{}),e==="ai"&&u.jsx(Moe,{}),e==="s-curve"&&u.jsx(Qoe,{}),e==="alerts"&&u.jsx(Ioe,{}),e==="risk-register"&&u.jsx(Uoe,{}),e==="doc-tracker"&&u.jsx(Woe,{}),e==="cert-expiry"&&u.jsx(Joe,{}),e==="meeting-minutes"&&u.jsx(Zoe,{}),e==="margin-forecaster"&&u.jsx($oe,{}),e==="retention"&&u.jsx(Hoe,{}),e==="benchmarking"&&u.jsx(Voe,{}),e==="sub-scorecard"&&u.jsx(Yoe,{})]})]}),s&&u.jsx(Aoe,{onClose:()=>l(!1),onImport:p})]})}Jz.createRoot(document.getElementById("root")).render(u.jsx(w.StrictMode,{children:u.jsx(gue,{})}))})();
+</script>
+<script>
+/* ------------------------------------------------------------------
+   Asgard Commercial Dashboard - licence gate
+   Self-contained. Does not touch the application bundle above.
+
+   HOW IT WORKS
+     - Every copy of this dashboard asks for a licence key on first run.
+     - The key is checked against licences.json hosted on GitHub.
+     - Edit that file to start a trial, extend it, or revoke access.
+       The change lands on the user's next page load.
+     - Offline copies keep working for OFFLINE_GRACE_DAYS, then lock
+       until they can check in again.
+
+   ADMIN PANEL
+     - Press Ctrl+Shift+L, or add #admin to the URL.
+     - Default password: AsgardAdmin2026!   <-- CHANGE THIS (see README)
+   ------------------------------------------------------------------ */
+(function () {
+  "use strict";
+
+  var CONFIG = {
+    // Where the licence register lives. Point this at whichever branch is live.
+    registerUrl:
+      "https://raw.githubusercontent.com/lindanislam-jpg/asgard-commercial-dashboard/refs/heads/main/licences.json",
+    // Convenience link shown in the admin panel for editing the register.
+    registerEditUrl:
+      "https://github.com/lindanislam-jpg/asgard-commercial-dashboard/edit/main/licences.json",
+    // SHA-256 of the admin password. Regenerate with:
+    //   printf '%s' 'your-new-password' | shasum -a 256
+    adminPasswordHash:
+      "0da93ecfb06cacf3b0b4569bec5b2316f99eb329bd1f787146edeaf783f32afd",
+    trialDays: 14,
+    offlineGraceDays: 7,
+    keyStore: "asgard_licence",
+    adminStore: "asgard_licence_admin"
+  };
+
+  /* ---------- tiny helpers ---------- */
+
+  function store(k, v) {
+    try {
+      if (v === null) localStorage.removeItem(k);
+      else localStorage.setItem(k, JSON.stringify(v));
+    } catch (e) {}
+  }
+  function load(k) {
+    try {
+      var raw = localStorage.getItem(k);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function todayISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+  function addDays(iso, n) {
+    var d = new Date(iso + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+  // Expiry is exclusive: access ends ON the expiry date. A trial started
+  // 14 Sep expiring 28 Sep therefore runs 14-27 Sep, i.e. exactly 14 days.
+  function daysLeft(iso) {
+    if (!iso) return Infinity;
+    var end = new Date(iso + "T00:00:00Z").getTime();
+    return Math.ceil((end - Date.now()) / 86400000);
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---------- SHA-256 (no secure-context requirement) ---------- */
+
+  function sha256(str) {
+    str = unescape(encodeURIComponent(str));
+    function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
+    var mp = Math.pow, maxWord = mp(2, 32), result = "", words = [], i, j;
+    var bitLength = str.length * 8;
+    var hash = sha256.h, k = sha256.k;
+    if (!hash) {
+      hash = sha256.h = []; k = sha256.k = [];
+      var primes = 0, composite = {};
+      for (var c = 2; primes < 64; c++) {
+        if (!composite[c]) {
+          for (i = 0; i < 313; i += c) composite[i] = c;
+          hash[primes] = (mp(c, 0.5) * maxWord) | 0;
+          k[primes++] = (mp(c, 1 / 3) * maxWord) | 0;
+        }
+      }
+      hash = hash.slice(0, 8);
+      sha256.h0 = hash.slice(0);
+    }
+    hash = sha256.h0.slice(0);
+    str += "\x80";
+    while (str.length % 64 - 56) str += "\x00";
+    for (i = 0; i < str.length; i++) {
+      j = str.charCodeAt(i);
+      if (j >> 8) return null;
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = (bitLength / maxWord) | 0;
+    words[words.length] = bitLength;
+    for (j = 0; j < words.length;) {
+      var w = words.slice(j, j += 16);
+      var old = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var t1 = hash[7] +
+          (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) +
+          ((e & hash[5]) ^ (~e & hash[6])) +
+          k[i] +
+          (w[i] = i < 16 ? w[i] : (w[i - 16] +
+            (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] +
+            (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+        var t2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) +
+          ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(t1 + t2) | 0].concat(hash);
+        hash[4] = (hash[4] + t1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + old[i]) | 0;
+    }
+    for (i = 0; i < 8; i++)
+      for (j = 3; j + 1; j--) {
+        var b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? "0" : "") + b.toString(16);
+      }
+    return result;
+  }
+
+  /* ---------- styles ---------- */
+
+  var css =
+    ".alg-ov{position:fixed;inset:0;z-index:2147483000;background:#18181b;color:#fafafa;" +
+    "display:flex;align-items:center;justify-content:center;padding:24px;" +
+    "font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;overflow-y:auto}" +
+    ".alg-card{width:100%;max-width:420px;background:#27272a;border:1px solid #3f3f46;" +
+    "border-radius:12px;padding:28px}" +
+    ".alg-card.wide{max-width:600px}" +
+    ".alg-h{font-size:18px;font-weight:600;margin:0 0 6px}" +
+    ".alg-p{color:#a1a1aa;margin:0 0 20px}" +
+    ".alg-l{display:block;font-size:12px;font-weight:600;color:#a1a1aa;margin:0 0 6px;" +
+    "text-transform:uppercase;letter-spacing:.04em}" +
+    ".alg-in{width:100%;box-sizing:border-box;background:#18181b;border:1px solid #3f3f46;" +
+    "border-radius:8px;padding:10px 12px;color:#fafafa;font-size:14px;margin:0 0 14px}" +
+    ".alg-in:focus{outline:2px solid #10b981;outline-offset:-1px;border-color:#10b981}" +
+    ".alg-b{width:100%;background:#10b981;color:#052e21;border:0;border-radius:8px;" +
+    "padding:11px;font-size:14px;font-weight:600;cursor:pointer}" +
+    ".alg-b:hover{background:#34d399}" +
+    ".alg-b.sec{background:#3f3f46;color:#fafafa}.alg-b.sec:hover{background:#52525b}" +
+    ".alg-b.dan{background:#ef4444;color:#fff}.alg-b.dan:hover{background:#f87171}" +
+    ".alg-b.sm{width:auto;padding:7px 12px;font-size:13px;margin:0 6px 6px 0}" +
+    ".alg-err{color:#ef4444;margin:0 0 14px;min-height:18px}" +
+    ".alg-note{color:#71717a;font-size:12px;margin:16px 0 0;text-align:center}" +
+    ".alg-row{display:flex;justify-content:space-between;align-items:center;gap:10px;" +
+    "padding:10px 0;border-bottom:1px solid #3f3f46}" +
+    ".alg-row:last-child{border-bottom:0}" +
+    ".alg-nm{font-weight:600}.alg-sub{color:#71717a;font-size:12px}" +
+    ".alg-pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;" +
+    "text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}" +
+    ".alg-pill.ok{background:#064e3b;color:#6ee7b7}" +
+    ".alg-pill.warn{background:#78350f;color:#fcd34d}" +
+    ".alg-pill.bad{background:#7f1d1d;color:#fca5a5}" +
+    ".alg-ta{width:100%;box-sizing:border-box;height:160px;background:#18181b;" +
+    "border:1px solid #3f3f46;border-radius:8px;padding:10px;color:#fafafa;" +
+    "font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;margin:0 0 10px}" +
+    ".alg-ban{position:fixed;left:0;right:0;bottom:0;z-index:2147482000;" +
+    "background:#78350f;color:#fcd34d;padding:8px 16px;text-align:center;" +
+    "font:13px system-ui,-apple-system,sans-serif}" +
+    ".alg-ban.grace{background:#7f1d1d;color:#fca5a5}" +
+    ".alg-ban button{background:none;border:0;color:inherit;text-decoration:underline;" +
+    "cursor:pointer;font:inherit;margin-left:10px}" +
+    "@media(max-width:480px){.alg-card{padding:20px}}";
+
+  var styleEl = document.createElement("style");
+  styleEl.textContent = css;
+  document.head.appendChild(styleEl);
+
+  /* ---------- overlay plumbing ---------- */
+
+  var overlay = null;
+  function showOverlay(html, wide) {
+    hideOverlay();
+    overlay = document.createElement("div");
+    overlay.className = "alg-ov";
+    overlay.innerHTML = '<div class="alg-card' + (wide ? " wide" : "") + '">' + html + "</div>";
+    document.body.appendChild(overlay);
+    var first = overlay.querySelector("input");
+    if (first) first.focus();
+    return overlay;
+  }
+  function hideOverlay() {
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    overlay = null;
+  }
+  function showBanner(text, grace) {
+    var old = document.querySelector(".alg-ban");
+    if (old) old.remove();
+    var b = document.createElement("div");
+    b.className = "alg-ban" + (grace ? " grace" : "");
+    b.innerHTML = esc(text) + '<button type="button">Dismiss</button>';
+    b.querySelector("button").onclick = function () { b.remove(); };
+    document.body.appendChild(b);
+  }
+
+  /* ---------- licence checking ---------- */
+
+  function fetchRegister() {
+    var url = CONFIG.registerUrl + "?t=" + Date.now();
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  // Returns {allow, reason, entry, stale}
+  function verdictFor(key, register) {
+    var entry = register && register.licences && register.licences[key];
+    if (!entry) return { allow: false, reason: "This licence key is not recognised." };
+    if (entry.status === "revoked")
+      return { allow: false, reason: "This licence has been revoked. Contact Asgard MM.", entry: entry };
+    var left = daysLeft(entry.expires);
+    if (left <= 0)
+      return { allow: false, reason: "This licence expired on " + entry.expires + ".", entry: entry };
+    return { allow: true, entry: entry, daysLeft: left };
+  }
+
+  function run() {
+    var saved = load(CONFIG.keyStore);
+
+    // Admin bypass: this browser is the owner's own.
+    if (load(CONFIG.adminStore)) {
+      bindAdminTrigger();
+      return;
+    }
+    if (!saved || !saved.key) return promptForKey();
+
+    fetchRegister()
+      .then(function (reg) {
+        var v = verdictFor(saved.key, reg);
+        saved.lastCheck = todayISO();
+        saved.lastVerdict = v.allow;
+        saved.entry = v.entry || null;
+        store(CONFIG.keyStore, saved);
+        if (!v.allow) return promptForKey(v.reason);
+        if (v.entry.status === "trial" && v.daysLeft <= CONFIG.trialDays)
+          showBanner("Trial licence - " + v.daysLeft + " day" + (v.daysLeft === 1 ? "" : "s") + " remaining.");
+        bindAdminTrigger();
+      })
+      .catch(function () {
+        // Offline. Fall back to the cached verdict inside the grace window.
+        var since = saved.lastCheck ? -daysLeft(saved.lastCheck) : Infinity;
+        if (saved.lastVerdict && since <= CONFIG.offlineGraceDays) {
+          showBanner(
+            "Offline - licence not verified. Connect within " +
+              Math.max(0, CONFIG.offlineGraceDays - since) + " day(s).",
+            true
+          );
+          bindAdminTrigger();
+        } else {
+          promptForKey("Could not verify this licence. Connect to the internet and reload.");
+        }
+      });
+  }
+
+  function promptForKey(err) {
+    showOverlay(
+      '<h1 class="alg-h">Asgard Commercial Dashboard</h1>' +
+      '<p class="alg-p">Enter the licence key you were issued.</p>' +
+      '<label class="alg-l" for="alg-key">Licence key</label>' +
+      '<input class="alg-in" id="alg-key" autocomplete="off" spellcheck="false" placeholder="XXXXX-XXXX">' +
+      '<p class="alg-err">' + esc(err || "") + "</p>" +
+      '<button class="alg-b" id="alg-go">Activate</button>' +
+      '<p class="alg-note">No key? Contact Asgard MM for a trial.</p>'
+    );
+    var input = overlay.querySelector("#alg-key");
+    var errEl = overlay.querySelector(".alg-err");
+    function submit() {
+      var key = input.value.trim().toUpperCase();
+      if (!key) return;
+      errEl.textContent = "Checking...";
+      fetchRegister()
+        .then(function (reg) {
+          var v = verdictFor(key, reg);
+          if (!v.allow) { errEl.textContent = v.reason; return; }
+          store(CONFIG.keyStore, {
+            key: key, lastCheck: todayISO(), lastVerdict: true, entry: v.entry
+          });
+          hideOverlay();
+          if (v.entry.status === "trial")
+            showBanner("Trial licence - " + v.daysLeft + " day" + (v.daysLeft === 1 ? "" : "s") + " remaining.");
+          bindAdminTrigger();
+        })
+        .catch(function () {
+          errEl.textContent = "Could not reach the licence server. Check your connection.";
+        });
+    }
+    overlay.querySelector("#alg-go").onclick = submit;
+    input.onkeydown = function (e) { if (e.key === "Enter") submit(); };
+    bindAdminTrigger();
+  }
+
+  /* ---------- admin ---------- */
+
+  var adminBound = false;
+  function bindAdminTrigger() {
+    if (adminBound) return;
+    adminBound = true;
+    document.addEventListener("keydown", function (e) {
+      if (e.ctrlKey && e.shiftKey && (e.key === "L" || e.key === "l")) {
+        e.preventDefault();
+        adminLogin();
+      }
+    });
+    // Works both on a fresh load with #admin and when the hash is added later.
+    window.addEventListener("hashchange", function () {
+      if (location.hash === "#admin") adminLogin();
+    });
+    if (location.hash === "#admin") adminLogin();
+  }
+
+  function adminLogin() {
+    showOverlay(
+      '<h1 class="alg-h">Admin access</h1>' +
+      '<p class="alg-p">Licence administration for this dashboard.</p>' +
+      '<label class="alg-l" for="alg-pw">Password</label>' +
+      '<input class="alg-in" id="alg-pw" type="password" autocomplete="off">' +
+      '<p class="alg-err"></p>' +
+      '<button class="alg-b" id="alg-in-b">Unlock</button>' +
+      '<button class="alg-b sec" id="alg-x" style="margin-top:8px">Cancel</button>'
+    );
+    var pw = overlay.querySelector("#alg-pw");
+    var errEl = overlay.querySelector(".alg-err");
+    function submit() {
+      if (sha256(pw.value) === CONFIG.adminPasswordHash) adminPanel();
+      else { errEl.textContent = "Incorrect password."; pw.value = ""; pw.focus(); }
+    }
+    overlay.querySelector("#alg-in-b").onclick = submit;
+    overlay.querySelector("#alg-x").onclick = function () { hideOverlay(); run(); };
+    pw.onkeydown = function (e) { if (e.key === "Enter") submit(); };
+  }
+
+  function adminPanel() {
+    showOverlay('<h1 class="alg-h">Licence admin</h1><p class="alg-p">Loading register...</p>', true);
+    fetchRegister()
+      .then(function (reg) { renderAdmin(reg); })
+      .catch(function () {
+        showOverlay(
+          '<h1 class="alg-h">Licence admin</h1>' +
+          '<p class="alg-err">Could not load licences.json. Check your connection.</p>' +
+          '<button class="alg-b sec" id="alg-x">Close</button>', true
+        );
+        overlay.querySelector("#alg-x").onclick = function () { hideOverlay(); run(); };
+      });
+  }
+
+  function renderAdmin(reg) {
+    reg.licences = reg.licences || {};
+    var keys = Object.keys(reg.licences);
+    var rows = keys.map(function (k) {
+      var e = reg.licences[k];
+      var left = daysLeft(e.expires);
+      var cls = "ok", label = "Active";
+      if (e.status === "revoked") { cls = "bad"; label = "Revoked"; }
+      else if (left <= 0) { cls = "bad"; label = "Expired"; }
+      else if (e.status === "trial") { cls = "warn"; label = "Trial - " + left + "d"; }
+      return (
+        '<div class="alg-row"><div>' +
+        '<div class="alg-nm">' + esc(e.name || k) + "</div>" +
+        '<div class="alg-sub">' + esc(k) + (e.expires ? " &middot; expires " + esc(e.expires) : " &middot; no expiry") + "</div>" +
+        "</div><div style=\"text-align:right\">" +
+        '<span class="alg-pill ' + cls + '">' + label + "</span><br>" +
+        '<button class="alg-b sm sec" data-ext="' + esc(k) + '" style="margin-top:8px">+14d</button>' +
+        '<button class="alg-b sm ' + (e.status === "revoked" ? "sec" : "dan") + '" data-tog="' + esc(k) + '">' +
+        (e.status === "revoked" ? "Restore" : "Revoke") + "</button>" +
+        "</div></div>"
+      );
+    }).join("");
+
+    showOverlay(
+      '<h1 class="alg-h">Licence admin</h1>' +
+      '<p class="alg-p">Changes are written to licences.json, which you commit to GitHub. They take effect on each user\'s next page load.</p>' +
+      (rows || '<p class="alg-sub">No licences yet.</p>') +
+      '<div style="margin:20px 0 0">' +
+      '<label class="alg-l" for="alg-nn">Start a new 14-day trial</label>' +
+      '<input class="alg-in" id="alg-nn" placeholder="Customer name, e.g. Collin">' +
+      '<button class="alg-b" id="alg-new">Create trial licence</button></div>' +
+      '<div id="alg-out" style="display:none;margin-top:20px">' +
+      '<label class="alg-l">Updated licences.json - paste this into GitHub</label>' +
+      '<textarea class="alg-ta" id="alg-json" spellcheck="false"></textarea>' +
+      '<button class="alg-b sm" id="alg-copy">Copy</button>' +
+      '<a class="alg-b sm sec" id="alg-edit" href="' + CONFIG.registerEditUrl + '" target="_blank" rel="noopener" ' +
+      'style="display:inline-block;text-align:center;text-decoration:none;line-height:1.5">Open on GitHub</a></div>' +
+      '<div style="margin-top:22px;border-top:1px solid #3f3f46;padding-top:16px">' +
+      '<button class="alg-b sm sec" id="alg-bypass">Trust this browser (skip gate)</button>' +
+      '<button class="alg-b sm sec" id="alg-x">Close</button></div>',
+      true
+    );
+
+    function emit() {
+      reg.updated = todayISO();
+      var out = overlay.querySelector("#alg-out");
+      out.style.display = "block";
+      overlay.querySelector("#alg-json").value = JSON.stringify(reg, null, 2);
+      out.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    Array.prototype.forEach.call(overlay.querySelectorAll("[data-ext]"), function (b) {
+      b.onclick = function () {
+        var e = reg.licences[b.getAttribute("data-ext")];
+        // Extend from today if already lapsed, otherwise from the current expiry.
+        var base = e.expires && daysLeft(e.expires) > 0 ? e.expires : todayISO();
+        e.expires = addDays(base, CONFIG.trialDays);
+        if (e.status === "revoked") e.status = "trial";
+        renderAdmin(reg);
+        emit();
+      };
+    });
+    Array.prototype.forEach.call(overlay.querySelectorAll("[data-tog]"), function (b) {
+      b.onclick = function () {
+        var e = reg.licences[b.getAttribute("data-tog")];
+        e.status = e.status === "revoked" ? "trial" : "revoked";
+        renderAdmin(reg);
+        emit();
+      };
+    });
+    overlay.querySelector("#alg-new").onclick = function () {
+      var name = overlay.querySelector("#alg-nn").value.trim();
+      if (!name) return;
+      var slug = name.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10) || "CLIENT";
+      var key = slug + "-" + new Date().getFullYear();
+      var n = 2;
+      while (reg.licences[key]) key = slug + "-" + new Date().getFullYear() + "-" + n++;
+      reg.licences[key] = {
+        name: name,
+        status: "trial",
+        expires: addDays(todayISO(), CONFIG.trialDays),
+        note: CONFIG.trialDays + "-day trial"
+      };
+      renderAdmin(reg);
+      emit();
+      window.alert("Licence key for " + name + ":\n\n" + key + "\n\nSend them this key, then commit the updated licences.json.");
+    };
+    overlay.querySelector("#alg-copy").onclick = function () {
+      var ta = overlay.querySelector("#alg-json");
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      if (navigator.clipboard) navigator.clipboard.writeText(ta.value).catch(function () {});
+      this.textContent = "Copied";
+    };
+    overlay.querySelector("#alg-bypass").onclick = function () {
+      store(CONFIG.adminStore, { since: todayISO() });
+      hideOverlay();
+      showBanner("Admin browser - licence gate bypassed.");
+    };
+    overlay.querySelector("#alg-x").onclick = function () { hideOverlay(); run(); };
+  }
+
+  /* ---------- go ---------- */
+
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", run);
+  else run();
+})();
 </script></body>
 </html>
