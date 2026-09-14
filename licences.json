@@ -1,0 +1,19 @@
+{
+  "_comment": "Licence register for the Asgard Commercial Dashboard. Edit this file to grant, extend or revoke access. Changes take effect the next time a user's browser checks in (on page load, or within the offline grace period).",
+  "_status_values": "trial | active | revoked",
+  "updated": "2026-09-14",
+  "licences": {
+    "COLLIN-2026": {
+      "name": "Collin",
+      "status": "trial",
+      "expires": "2026-09-28",
+      "note": "14-day trial"
+    },
+    "ASGARD-HOUSE": {
+      "name": "Asgard MM (internal)",
+      "status": "active",
+      "expires": null,
+      "note": "Internal use - no expiry"
+    }
+  }
+}
